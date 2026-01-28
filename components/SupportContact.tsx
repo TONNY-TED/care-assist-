@@ -5,7 +5,7 @@ const SupportContact: React.FC = () => {
   return (
     <div className="bg-white border-t p-4 sticky bottom-0 w-full flex gap-4 md:justify-center">
       <a 
-        href="tel:0996464291"
+        href="tel:+265996464291"
         className="flex-1 max-w-[200px] flex items-center justify-center gap-2 bg-blue-600 text-white py-3 px-4 rounded-xl font-medium hover:bg-blue-700 transition shadow-md active:scale-95"
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -14,7 +14,7 @@ const SupportContact: React.FC = () => {
         Call Support
       </a>
       <a 
-        href="https://wa.me/0996464291"
+        href="https://wa.me/265996464291"
         target="_blank"
         rel="noopener noreferrer"
         className="flex-1 max-w-[200px] flex items-center justify-center gap-2 bg-emerald-500 text-white py-3 px-4 rounded-xl font-medium hover:bg-emerald-600 transition shadow-md active:scale-95"

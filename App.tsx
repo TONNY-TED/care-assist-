@@ -9,7 +9,7 @@ import Footer from './components/Footer';
 import FirstAid from './components/FirstAid';
 import PrivacyControl from './components/PrivacyControl';
 import HowToUse from './components/HowToUse';
-import { EMERGENCY_KEYWORDS, MEDICAL_DISCLAIMER } from './constants';
+import { EMERGENCY_KEYWORDS } from './constants';
 
 const App: React.FC = () => {
   const [view, setView] = useState<ViewState>('home');
@@ -100,13 +100,18 @@ const App: React.FC = () => {
               <h2 className="text-lg font-bold text-slate-800 dark:text-white mb-4">Symptom Check</h2>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <textarea name="description" rows={4} className={inputClasses} placeholder="Describe your symptoms (e.g., I have a sharp pain in my left knee...)" value={symptoms.description} onChange={handleInputChange} required />
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <input type="number" name="age" className={inputClasses} placeholder="Age" value={symptoms.age} onChange={handleInputChange} />
                   <select name="gender" className={inputClasses} value={symptoms.gender} onChange={handleInputChange}>
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
                     <option value="Other">Other</option>
                   </select>
+                  <input type="text" name="duration" className={inputClasses} placeholder="Duration (e.g. 3 days)" value={symptoms.duration} onChange={handleInputChange} />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-slate-500 uppercase">Severity: {symptoms.severity}/10</label>
+                  <input type="range" name="severity" min="1" max="10" value={symptoms.severity} onChange={handleInputChange} className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-600" />
                 </div>
                 <button type="submit" disabled={loading} className={`w-full py-4 rounded-xl font-bold text-white transition shadow-lg ${loading ? 'bg-slate-400' : 'bg-blue-600 hover:bg-blue-700 active:scale-95'}`}>
                   {loading ? (
@@ -123,24 +128,24 @@ const App: React.FC = () => {
             </section>
 
             {error && (
-              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 p-6 rounded-2xl text-red-700 dark:text-red-400 animate-in fade-in zoom-in duration-300">
+              <div className="bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-200 dark:border-amber-800 p-5 rounded-2xl text-amber-700 dark:text-amber-400 animate-in fade-in zoom-in duration-300">
                 <div className="flex gap-4">
-                  <div className="bg-red-100 dark:bg-red-800/50 p-2 rounded-lg h-fit">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  <div className="bg-amber-100 dark:bg-amber-800/50 p-2 rounded-lg h-fit">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
-                  <div>
-                    <h4 className="font-bold text-lg mb-1">Analysis Could Not Complete</h4>
-                    <p className="text-sm opacity-90 mb-3">{error}</p>
-                    <div className="text-xs space-y-2 border-t border-red-200 dark:border-red-800 pt-3">
-                      <p className="font-semibold uppercase tracking-wider">Troubleshooting:</p>
-                      <ul className="list-disc ml-4 space-y-1 opacity-75">
-                        <li>Ensure you have a <strong>.env</strong> file with <code>API_KEY=your_key</code> in your project root.</li>
-                        <li>Check if your API key from <a href="https://aistudio.google.com/" target="_blank" className="underline font-bold">Google AI Studio</a> is correct.</li>
-                        <li>If you are opening the <code>index.html</code> file directly (without a server), environment variables will not work.</li>
-                      </ul>
-                    </div>
+                  <div className="flex-1">
+                    <h4 className="font-bold text-base mb-1">Status Update</h4>
+                    <p className="text-xs opacity-90 leading-relaxed">{error}</p>
+                    {error.includes("busy") && (
+                       <button 
+                         onClick={handleSubmit} 
+                         className="mt-3 text-xs font-bold uppercase tracking-wider text-amber-800 dark:text-amber-300 underline"
+                       >
+                         Try Again Now
+                       </button>
+                    )}
                   </div>
                 </div>
               </div>
@@ -209,7 +214,6 @@ const App: React.FC = () => {
         <button onClick={() => setIsDarkMode(!isDarkMode)} className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500">{isDarkMode ? '☀️' : '🌙'}</button>
       </header>
 
-      {/* Main Navigation Tabs */}
       <nav className="bg-white dark:bg-slate-900 border-b dark:border-slate-800 sticky top-[68px] z-20 px-4 overflow-x-auto whitespace-nowrap hide-scrollbar">
         <div className="max-w-4xl mx-auto flex">
           {[
@@ -237,7 +241,6 @@ const App: React.FC = () => {
           </div>
         )}
         
-        {/* Cool transition wrapper using key to trigger CSS animations on view switch */}
         <div key={view} className="animate-in fade-in slide-in-from-right-4 duration-500 ease-out">
           {renderContent()}
         </div>

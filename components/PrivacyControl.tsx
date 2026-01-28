@@ -32,13 +32,11 @@ const PrivacyControl: React.FC = () => {
       let y = 20;
 
       // --- Branded Header (First Page) ---
-      // Draw Heart Icon manually using shapes to avoid FormObject errors
       doc.setFillColor(37, 99, 235); // blue-600
       doc.setDrawColor(37, 99, 235);
       
       const hX = 20;
       const hY = 20;
-      // Heart consists of two circles and a triangle
       doc.circle(hX - 2, hY, 3, 'F');
       doc.circle(hX + 2, hY, 3, 'F');
       doc.triangle(hX - 4.8, hY + 1, hX + 4.8, hY + 1, hX, hY + 7, 'F');
@@ -62,7 +60,6 @@ const PrivacyControl: React.FC = () => {
       history.forEach((item, index) => {
         if (!item || !item.data || !item.guidance) return;
 
-        // Check for page overflow
         if (y > pageHeight - 45) {
           doc.addPage();
           y = 25;
@@ -70,14 +67,12 @@ const PrivacyControl: React.FC = () => {
 
         const date = new Date(item.timestamp).toLocaleString();
         
-        // Entry Header
         doc.setFont("helvetica", "bold");
         doc.setFontSize(12);
         doc.setTextColor(37, 99, 235); // blue-600
         doc.text(`Record #${history.length - index} - ${date}`, 15, y);
         y += 8;
 
-        // User Description
         doc.setFont("helvetica", "bold");
         doc.setFontSize(10);
         doc.setTextColor(51, 65, 85); // slate-700
@@ -88,7 +83,6 @@ const PrivacyControl: React.FC = () => {
         doc.text(descLines, 15, y);
         y += (descLines.length * 5) + 5;
 
-        // Possible Causes
         if (item.guidance.possibleCauses && item.guidance.possibleCauses.length > 0) {
           doc.setFont("helvetica", "bold");
           doc.text("Possible Causes:", 15, y);
@@ -99,7 +93,6 @@ const PrivacyControl: React.FC = () => {
           y += (causeLines.length * 5) + 5;
         }
 
-        // OTC Recommendations
         if (item.guidance.medicines && item.guidance.medicines.length > 0) {
           doc.setFont("helvetica", "bold");
           doc.text("OTC Recommendations:", 15, y);
@@ -118,14 +111,13 @@ const PrivacyControl: React.FC = () => {
           y += 5;
         }
 
-        // Divider
         doc.setDrawColor(241, 245, 249); // slate-100
         doc.line(15, y, pageWidth - 15, y);
         y += 12;
       });
 
       // --- Branded Footer ---
-      const totalPages = doc.internal.getNumberOfPages();
+      const totalPages = doc.getNumberOfPages();
       for (let i = 1; i <= totalPages; i++) {
         doc.setPage(i);
         doc.setDrawColor(226, 232, 240); // slate-200
@@ -135,7 +127,7 @@ const PrivacyControl: React.FC = () => {
         doc.setFont("helvetica", "normal");
         doc.setTextColor(100, 116, 139); // slate-500
         
-        const footerInfo = "tonnychibambo@gmail.com | 0996464291";
+        const footerInfo = "tonnychibambo@gmail.com | +265 996 464 291";
         const developer = "Developed by Prop Industries";
         
         doc.text(footerInfo, pageWidth / 2, pageHeight - 18, { align: "center" });

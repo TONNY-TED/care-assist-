@@ -2,9 +2,6 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { SymptomData, HealthGuidance } from "../types";
 
-// The API key must be obtained exclusively from the environment variable process.env.API_KEY
-const API_KEY = process.env.API_KEY;
-
 const RESPONSE_SCHEMA = {
   type: Type.OBJECT,
   properties: {
@@ -50,56 +47,56 @@ const RESPONSE_SCHEMA = {
 };
 
 export async function analyzeSymptoms(data: SymptomData): Promise<HealthGuidance> {
-  // 1. Check if the environment variable is even present
-  if (!API_KEY || API_KEY === "undefined" || API_KEY.trim() === "") {
-    console.error("DEBUG: API_KEY is missing. Ensure your .env file or local environment is set up.");
-    throw new Error("API Key Missing: Please ensure process.env.API_KEY is defined.");
+  const rawKey = process.env.API_KEY || "";
+  const apiKey = rawKey.replace(/['"]+/g, '').replace(/[\u200B-\u200D\uFEFF]/g, '').trim();
+
+  if (!apiKey || apiKey === "undefined") {
+    throw new Error(`Technical Error: API Key is missing in the browser.`);
   }
 
-  const ai = new GoogleGenAI({ apiKey: API_KEY });
+  const ai = new GoogleGenAI({ apiKey });
 
-  const prompt = `
-    System: You are an expert medical assistant providing informational health guidance. 
-    Constraint: Suggest ONLY Over-the-Counter (OTC) medications. NEVER suggest prescription drugs.
-    
-    User Query:
-    Description: ${data.description}
-    Patient: ${data.age} year old ${data.gender}.
-    Timeline: ${data.duration}.
-    Severity: ${data.severity}/10.
+  const userPrompt = `
+    SYMPTOM DESCRIPTION: ${data.description}
+    PATIENT PROFILE: ${data.age || 'Unknown'} year old ${data.gender}.
+    TIMELINE: ${data.duration || 'Not specified'}.
+    SEVERITY: ${data.severity}/10.
   `;
 
   try {
-    // Basic Text Task uses gemini-3-flash-preview
+    // Switching to the more stable 'gemini-flash-latest' to avoid the 503 "Model Overloaded" issues
     const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
-      contents: prompt,
+      model: "gemini-flash-latest",
+      contents: [{ parts: [{ text: userPrompt }] }],
       config: {
+        systemInstruction: "You are an expert medical assistant. Provide informational health guidance based on evidence. Suggest ONLY Over-the-Counter (OTC) medications. NEVER suggest prescription drugs. Be concise, professional, and empathetic.",
         responseMimeType: "application/json",
         responseSchema: RESPONSE_SCHEMA
       }
     });
     
     if (!response.text) {
-      throw new Error("The AI model returned an empty response.");
+      throw new Error("The AI returned no text.");
     }
 
     return JSON.parse(response.text);
   } catch (error: any) {
-    console.error("AI Service Error Log:", error);
-    
     const msg = error.message || "";
+    console.error("Gemini API Error:", error);
     
-    // Specific check for model availability (404)
-    if (msg.includes("404") || msg.includes("model not found")) {
-      throw new Error("Model Not Found: 'gemini-3-flash-preview' might be unavailable in your region or for your key type.");
-    }
-    
-    // Specific check for invalid credentials (400/403)
-    if (msg.includes("400") || msg.includes("403") || msg.includes("API_KEY_INVALID")) {
-      throw new Error("Authentication Failed: The provided API Key is invalid. Check Google AI Studio.");
+    // Specifically handle the 503 "Overloaded" error
+    if (msg.includes("503") || msg.includes("overloaded")) {
+      throw new Error("Google's servers are temporarily busy due to high traffic. Please wait 10 seconds and try again. Your API Key is working correctly.");
     }
 
-    throw new Error(`Analysis failed: ${msg || "Unknown connection error"}`);
+    if (msg.includes("403") || msg.includes("API_KEY_INVALID") || msg.includes("key rejected")) {
+      throw new Error(`Google Auth Failed: The key was rejected. Ensure the Generative Language API is enabled in your Google Cloud Console.`);
+    }
+
+    if (msg.includes("User location is not supported")) {
+      throw new Error("Regional Restriction: Gemini is not available in your current location.");
+    }
+    
+    throw new Error(`Analysis Failed: ${msg}`);
   }
 }
