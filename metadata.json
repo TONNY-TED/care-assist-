@@ -1,5 +1,9 @@
 {
   "name": "CareAssist Web",
-  "description": "A responsive health assistance application providing informational health guidance, OTC medicine suggestions, and emergency detection for symptom relief and wellness.",
+  "short_name": "CareAssist",
+  "description": "Smart health assistance by Prop Industries. Professional AI symptom checking, informational health guidance, and offline first-aid protocols.",
+  "theme_color": "#2563eb",
+  "background_color": "#f8fafc",
+  "display": "standalone",
   "requestFramePermissions": []
 }
