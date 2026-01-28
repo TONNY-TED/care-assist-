@@ -3,7 +3,7 @@ import React from 'react';
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-slate-900 text-slate-300 py-12 px-6 mt-12 border-t border-slate-800">
+    <footer className="bg-slate-900 text-slate-300 py-12 px-6 mt-12 border-t border-slate-800 transition-colors">
       <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
         {/* Brand Section */}
         <div className="space-y-4">
@@ -19,7 +19,7 @@ const Footer: React.FC = () => {
             Empowering patients with accessible, informational health guidance and self-care tools.
           </p>
           <div className="pt-2">
-            <p className="text-xs uppercase tracking-wider font-semibold text-slate-500 mb-1">Contact Us</p>
+            <p className="text-xs uppercase tracking-wider font-semibold text-slate-500 mb-1">Inquiries</p>
             <a href="mailto:tonnychibambo@gmail.com" className="text-blue-400 hover:text-blue-300 transition text-sm">
               tonnychibambo@gmail.com
             </a>
@@ -30,11 +30,10 @@ const Footer: React.FC = () => {
         <div>
           <h4 className="text-white font-bold mb-4 uppercase tracking-widest text-xs">Product</h4>
           <ul className="space-y-3 text-sm">
-            <li><a href="#" className="hover:text-blue-400 transition">Features</a></li>
             <li><a href="#" className="hover:text-blue-400 transition">Symptom Checker</a></li>
-            <li><a href="#" className="hover:text-blue-400 transition">OTC Directory</a></li>
-            <li><a href="#" className="hover:text-blue-400 transition">Health Resources</a></li>
-            <li><a href="#" className="hover:text-blue-400 transition">API Access</a></li>
+            <li><a href="#" className="hover:text-blue-400 transition">OTC Suggestions</a></li>
+            <li><a href="#" className="hover:text-blue-400 transition">Privacy Focus</a></li>
+            <li><a href="#" className="hover:text-blue-400 transition">Prop Industries Lab</a></li>
           </ul>
         </div>
 
@@ -42,23 +41,23 @@ const Footer: React.FC = () => {
         <div>
           <h4 className="text-white font-bold mb-4 uppercase tracking-widest text-xs">Industries</h4>
           <ul className="space-y-3 text-sm">
-            <li><a href="#" className="hover:text-blue-400 transition">Telehealth Providers</a></li>
-            <li><a href="#" className="hover:text-blue-400 transition">Retail Pharmacy</a></li>
-            <li><a href="#" className="hover:text-blue-400 transition">Community Clinics</a></li>
-            <li><a href="#" className="hover:text-blue-400 transition">Insurance Partners</a></li>
-            <li><a href="#" className="hover:text-blue-400 transition">Global NGOs</a></li>
+            <li><a href="#" className="hover:text-blue-400 transition">Digital Health</a></li>
+            <li><a href="#" className="hover:text-blue-400 transition">Personal Wellness</a></li>
+            <li><a href="#" className="hover:text-blue-400 transition">Telemedicine</a></li>
+            <li><a href="#" className="hover:text-blue-400 transition">Public Health</a></li>
           </ul>
         </div>
       </div>
 
       <div className="max-w-4xl mx-auto mt-12 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
-        <p className="text-xs text-slate-500">
-          © {new Date().getFullYear()} CareAssist Web. All rights reserved.
-        </p>
+        <div className="text-xs text-slate-500 space-y-1 text-center md:text-left">
+          <p>© {new Date().getFullYear()} CareAssist Web. All rights reserved.</p>
+          <p className="font-medium text-slate-400">Developed by <span className="text-blue-500">Prop Industries</span></p>
+        </div>
         <div className="flex gap-6 text-xs text-slate-500">
-          <a href="#" className="hover:text-slate-300 transition">Privacy Policy</a>
-          <a href="#" className="hover:text-slate-300 transition">Terms of Service</a>
-          <a href="#" className="hover:text-slate-300 transition">Cookies</a>
+          <a href="#" className="hover:text-slate-300 transition font-medium">Privacy</a>
+          <a href="#" className="hover:text-slate-300 transition font-medium">Terms</a>
+          <a href="mailto:tonnychibambo@gmail.com" className="hover:text-blue-400 transition font-bold text-slate-400">Contact Developer</a>
         </div>
       </div>
     </footer>

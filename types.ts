@@ -20,6 +20,7 @@ export interface HealthGuidance {
   whenToSeeDoctor: string[];
   medicines: OTCRecommendation[];
   isEmergency: boolean;
+  reasoning: string; // New field for AI transparency
 }
 
 export interface HistoryItem {

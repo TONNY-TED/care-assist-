@@ -10,7 +10,7 @@ const RESPONSE_SCHEMA = {
     possibleCauses: {
       type: Type.ARRAY,
       items: { type: Type.STRING },
-      description: "List of common informational causes, not medical diagnoses."
+      description: "List of common informational causes."
     },
     immediateActions: {
       type: Type.ARRAY,
@@ -38,30 +38,30 @@ const RESPONSE_SCHEMA = {
         },
         required: ["name", "dosage", "warnings"]
       },
-      description: "Suggested Over-the-Counter medicines only."
+      description: "Suggested Over-the-Counter medicines only. Strictly NO prescription-only drugs."
     },
     isEmergency: {
       type: Type.BOOLEAN,
-      description: "True if symptoms suggest a life-threatening emergency."
+      description: "True if symptoms suggest an emergency."
+    },
+    reasoning: {
+      type: Type.STRING,
+      description: "A brief explanation of why these actions and OTC medicines were suggested based on the symptoms."
     }
   },
-  required: ["possibleCauses", "immediateActions", "preventiveMeasures", "whenToSeeDoctor", "medicines", "isEmergency"]
+  required: ["possibleCauses", "immediateActions", "preventiveMeasures", "whenToSeeDoctor", "medicines", "isEmergency", "reasoning"]
 };
 
 export async function analyzeSymptoms(data: SymptomData): Promise<HealthGuidance> {
   const prompt = `
-    Analyze these symptoms and provide informational health guidance. 
-    Age: ${data.age}
-    Gender: ${data.gender}
-    Duration: ${data.duration}
-    Severity: ${data.severity}/10
+    System: You are an expert medical assistant. You provide informational health guidance based on user symptoms. 
+    Constraint: Suggest ONLY Over-the-Counter (OTC) medications. NEVER suggest prescription-only drugs.
+    
+    User Query:
     Description: ${data.description}
-
-    Rules:
-    1. NEVER provide a final medical diagnosis.
-    2. Suggest only standard OTC medications (e.g. Paracetamol, Ibuprofen, Antacids).
-    3. Include safe general dosage guidelines and critical warnings for each medication.
-    4. If symptoms imply high risk (chest pain, stroke signs, etc.), set isEmergency to true.
+    Patient Profile: ${data.age} years old, ${data.gender}.
+    Timeline: ${data.duration}.
+    Self-reported Severity: ${data.severity}/10.
   `;
 
   try {
@@ -71,13 +71,14 @@ export async function analyzeSymptoms(data: SymptomData): Promise<HealthGuidance
       config: {
         responseMimeType: "application/json",
         responseSchema: RESPONSE_SCHEMA,
+        // Using thinkingConfig to ensure the model carefully considers symptom interactions
+        thinkingConfig: { thinkingBudget: 2000 }
       }
     });
-
-    const result = JSON.parse(response.text);
-    return result as HealthGuidance;
+    
+    return JSON.parse(response.text);
   } catch (error) {
     console.error("Gemini API Error:", error);
-    throw new Error("Failed to analyze symptoms. Please try again.");
+    throw new Error("Failed to analyze symptoms. Please try again or seek professional help.");
   }
 }
