@@ -5,6 +5,7 @@ import { SymptomData, HealthGuidance, HistoryItem } from './types';
 import DisclaimerModal from './components/DisclaimerModal';
 import HistoryPanel from './components/HistoryPanel';
 import SupportContact from './components/SupportContact';
+import Footer from './components/Footer';
 import { EMERGENCY_KEYWORDS, MEDICAL_DISCLAIMER } from './constants';
 
 const App: React.FC = () => {
@@ -97,17 +98,17 @@ const App: React.FC = () => {
       <DisclaimerModal onAccept={() => {}} />
 
       {/* Header */}
-      <header className="bg-white border-b px-6 py-4 flex justify-between items-center sticky top-0 z-30">
+      <header className="bg-white border-b px-6 py-4 flex justify-between items-center sticky top-0 z-30 shadow-sm">
         <div className="flex items-center gap-2">
           <div className="bg-blue-600 p-2 rounded-lg">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
             </svg>
           </div>
-          <h1 className="text-xl font-bold text-slate-900">CareAssist <span className="text-blue-600">Web</span></h1>
+          <h1 className="text-xl font-bold text-slate-900 tracking-tight">CareAssist <span className="text-blue-600">Web</span></h1>
         </div>
-        <div className="hidden md:block text-xs text-slate-400 max-w-[300px] text-right">
-          Educational health guidance tool.
+        <div className="hidden md:block text-xs text-slate-400 font-medium">
+          Professional Health Guidance Tool
         </div>
       </header>
 
@@ -123,7 +124,7 @@ const App: React.FC = () => {
             <div>
               <h2 className="text-red-700 font-bold text-lg">EMERGENCY DETECTED</h2>
               <p className="text-red-600 text-sm">Symptoms described may require immediate medical attention. Please call emergency services or go to the nearest hospital right away.</p>
-              <a href="tel:911" className="mt-2 inline-block bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-bold uppercase tracking-wider">Call Emergency Services Now</a>
+              <a href="tel:911" className="mt-2 inline-block bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-bold uppercase tracking-wider transition hover:bg-red-700 active:scale-95">Call Emergency Services Now</a>
             </div>
           </div>
         )}
@@ -139,7 +140,7 @@ const App: React.FC = () => {
                   <textarea
                     name="description"
                     rows={4}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition bg-slate-50/30"
                     placeholder="e.g. I have a throbbing headache and slight fever since yesterday..."
                     value={symptoms.description}
                     onChange={handleInputChange}
@@ -153,7 +154,7 @@ const App: React.FC = () => {
                     <input
                       type="number"
                       name="age"
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 bg-slate-50/30"
                       value={symptoms.age}
                       onChange={handleInputChange}
                     />
@@ -162,7 +163,7 @@ const App: React.FC = () => {
                     <label className="block text-sm font-medium text-slate-700 mb-1">Gender</label>
                     <select
                       name="gender"
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 bg-slate-50/30"
                       value={symptoms.gender}
                       onChange={handleInputChange}
                     >
@@ -179,7 +180,7 @@ const App: React.FC = () => {
                     <input
                       type="text"
                       name="duration"
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 bg-slate-50/30"
                       placeholder="e.g. 2 days"
                       value={symptoms.duration}
                       onChange={handleInputChange}
@@ -231,7 +232,7 @@ const App: React.FC = () => {
             {/* Results Section */}
             <div ref={resultsRef}>
               {guidance && (
-                <section className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <section className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-12">
                   <div className="bg-blue-50 border border-blue-100 p-4 rounded-xl text-xs text-blue-800 leading-relaxed italic">
                     <strong>Disclaimer:</strong> {MEDICAL_DISCLAIMER}
                   </div>
@@ -365,7 +366,10 @@ const App: React.FC = () => {
         </div>
       </main>
 
-      {/* Footer / Fixed Action Bar */}
+      {/* Footer Section */}
+      <Footer />
+
+      {/* Sticky Support Action Bar */}
       <SupportContact />
     </div>
   );
